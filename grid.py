@@ -25,20 +25,23 @@ def neighbors(node, node_positions):
 
 def setup_nodes(X, Y, holes):
 	node_positions = []
-	for x in range(0, X):
-		for y in range(0, Y):
+	for y in range(0, Y):
+		for x in range(0, X):
 			node_positions.append([x, y])
-	for _ in range(0, holes):
-		node_positions.pop(random.randint(0, len(node_positions)-1))
+
+	# removes 'holes' nodes randomly
+	to_remove = random.sample(node_positions, holes)
+	for n in to_remove:
+		node_positions.remove(n)
+
 	nodes = []
 	for n in node_positions:
 		nodes.append(Node(n[0], n[1], neighbors(n, node_positions)))
+
 	if len(nodes) >= 2:
-		nodes[random.randint(0, X)].flag = "start"
-		random_node = nodes[random.randint(len(nodes)-(2*holes), len(nodes)-holes)]
-		while random_node.flag == "start":
-			random_node = nodes[random.randint(0, len(nodes))]
-		random_node.flag = "end"
+		quart = len(nodes)/4
+		random.choice(nodes[:quart]).flag = "start"
+		random.choice(nodes[-quart:]).flag = "end"
 	return nodes
 
 ## ----------------------------------------------------------------------------
@@ -103,9 +106,9 @@ def render(nodes, X, Y):
 ## MAIN
 
 def main():
-	X = 20
-	Y = 14
-	holes = int((30 * (X * Y)) / 100.0)
+	X = 16
+	Y = 12
+	holes = int((25 * (X * Y)) / 100.0)
 	nodes = setup_nodes(X, Y, holes)
 	render(nodes, X, Y)
 
