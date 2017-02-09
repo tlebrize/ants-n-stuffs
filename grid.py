@@ -1,5 +1,7 @@
 #!/usr/env python
 
+from __future__ import division, print_function
+
 ## ----------------------------------------------------------------------------
 ## SETUP
 
@@ -46,7 +48,7 @@ def setup_nodes(X, Y, holes):
 			node_names.pop()))
 
 	if len(nodes) >= 2:
-		quart = len(nodes)/4
+		quart = int(len(nodes)/4.0)
 		start = random.choice(nodes[:quart])
 		start.flag = "start"
 		start.name = "name"
@@ -58,8 +60,8 @@ def setup_nodes(X, Y, holes):
 ## ----------------------------------------------------------------------------
 ## RENDER
 
-import Tkinter as tk
-import tkFont
+import tkinter as tk
+from tkinter import font as tkfont
 
 class Board(tk.Frame):
 
@@ -106,7 +108,7 @@ class Board(tk.Frame):
 		y = int(node.Y * self.scale + (self.scale * 0.5))
 		s = int(self.scale * 0.35)
 		t = int(self.scale * 0.65)
-		font = tkFont.Font(size=-int(self.scale * 0.12))
+		font = tkfont.Font(size=-int(self.scale * 0.12))
 		if node.flag == "start":
 			self.caneva.create_rectangle(x-s, y-s, x+s, y+s, width=0, fill="#fff200")
 			self.caneva.create_text(x, y, width=t, font=font, text="Start")
@@ -126,17 +128,14 @@ def render(nodes, X, Y, scale):
 ## OUTPUT
 
 def output(number_of_ants, nodes):
-	print number_of_ants
+	print(number_of_ants)
 	links = {}
 	for node in nodes:
 		if node.flag == "start":
-			print "##start"
+			print("##start")
 		elif node.flag == "end":
-			print "##end"
-		print "%s %s %s" % (node.name, node.X, node.Y)
-
-
-
+			print("##end")
+		print("%s %s %s" % (node.name, node.X, node.Y))
 
 ## ----------------------------------------------------------------------------
 ## MAIN
