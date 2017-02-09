@@ -3,14 +3,16 @@
 ## ----------------------------------------------------------------------------
 ## SETUP
 
+from random_words import RandomWords
 import random
 
 class Node(object):
 
-	def __init__(self, x, y, neighbors):
+	def __init__(self, x, y, neighbors, name):
 		self.X = x
 		self.Y = y
 		self.neighbors = neighbors
+		self.name = name
 		self.flag = None
 
 
@@ -34,9 +36,14 @@ def setup_nodes(X, Y, holes):
 	for n in to_remove:
 		node_positions.remove(n)
 
+	# generate a list of random words to name each node
+	rw = RandomWords()
+	node_names = rw.random_words(count=len(node_positions))
+	
 	nodes = []
 	for n in node_positions:
-		nodes.append(Node(n[0], n[1], neighbors(n, node_positions)))
+		nodes.append(Node(n[0], n[1], neighbors(n, node_positions),
+			node_names.pop()))
 
 	if len(nodes) >= 2:
 		quart = len(nodes)/4
@@ -48,21 +55,23 @@ def setup_nodes(X, Y, holes):
 ## RENDER
 
 import Tkinter as tk
+import tkFont
 
 class Board(tk.Frame):
 
-	def __init__(self, parent, nodes, X, Y):
+	def __init__(self, parent, nodes, X, Y, scale):
 		tk.Frame.__init__(self, parent)
 		self.parent = parent
 		self.nodes = nodes
 		self.X = X
 		self.Y = Y
+		self.scale = scale * 80
 		self.centerWindow()
 		self.drawBoard()
 
 	def centerWindow(self):
-		w = self.X * 80
-		h = self.Y * 80
+		w = self.X * self.scale
+		h = self.Y * self.scale
 		sw = self.parent.winfo_screenwidth()
 		sh = self.parent.winfo_screenheight()
 		x = (sw - w)/2
@@ -70,8 +79,8 @@ class Board(tk.Frame):
 		self.parent.geometry('%dx%d+%d+%d' % (w, h, x, y))
 
 	def drawBoard(self):
-		h = self.X * 80
-		w = self.Y * 80
+		h = self.X * self.scale
+		w = self.Y * self.scale
 		self.caneva = tk.Canvas(self.parent, height=h, width=w)
 		self.caneva.pack(fill=tk.BOTH, expand=1)
 		for node in self.nodes:
@@ -80,36 +89,48 @@ class Board(tk.Frame):
 			self.drawNode(node)
 
 	def drawEdges(self, node):
-		x = node.X * 80 + 40
-		y = node.Y * 80 + 40
+		x = int(node.X * self.scale + (self.scale * 0.5))
+		y = int(node.Y * self.scale + (self.scale * 0.5))
+		w = int(self.scale / 16)
 		for neighbor in node.neighbors:
-			nx = neighbor[0] * 80 + 40
-			ny = neighbor[1] * 80 + 40
-			self.caneva.create_line(x, y, nx, ny, width=5, fill="#4286f4")
+			nx = neighbor[0] * self.scale + (self.scale * 0.5)
+			ny = neighbor[1] * self.scale + (self.scale * 0.5)
+			self.caneva.create_line(x, y, nx, ny, width=w, fill="#4286f4")
 
 	def drawNode(self, node):
-		x = node.X * 80 + 40
-		y = node.Y * 80 + 40
+		x = int(node.X * self.scale + (self.scale * 0.5))
+		y = int(node.Y * self.scale + (self.scale * 0.5))
+		s = int(self.scale * 0.35)
+		t = int(self.scale * 0.65)
+		font = tkFont.Font(size=-int(self.scale * 0.12))
 		if node.flag == "start":
-			self.caneva.create_rectangle(x-30, y-30, x+30, y+30, width=0, fill="#fff200")
+			self.caneva.create_rectangle(x-s, y-s, x+s, y+s, width=0, fill="#fff200")
+			self.caneva.create_text(x, y, width=t, font=font, text="Start")
 		elif node.flag == "end":
-			self.caneva.create_rectangle(x-30, y-30, x+30, y+30, width=0, fill="#ff0015")
+			self.caneva.create_rectangle(x-s, y-s, x+s, y+s, width=0, fill="#ff0015")
+			self.caneva.create_text(x, y, width=t, font=font, text="End")
 		else:
-			self.caneva.create_rectangle(x-30, y-30, x+30, y+30, width=0, fill="#0ad64b")
+			self.caneva.create_rectangle(x-s, y-s, x+s, y+s, width=0, fill="#0ad64b")
+			self.caneva.create_text(x, y, width=t, font=font, text=node.name)
 
-def render(nodes, X, Y):
+def render(nodes, X, Y, scale):
 	root = tk.Tk()
-	board = Board(root, nodes, X, Y)
+	board = Board(root, nodes, X, Y, scale)
 	root.mainloop()
+
+## ----------------------------------------------------------------------------
+## OUTPUT
+
 
 ## ----------------------------------------------------------------------------
 ## MAIN
 
 def main():
-	X = 16
-	Y = 12
+	X = 8
+	Y = 6
 	holes = int((25 * (X * Y)) / 100.0)
 	nodes = setup_nodes(X, Y, holes)
-	render(nodes, X, Y)
+	scale = 2
+	render(nodes, X, Y, scale)
 
 main()
