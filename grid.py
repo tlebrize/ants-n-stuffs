@@ -47,8 +47,12 @@ def setup_nodes(X, Y, holes):
 
 	if len(nodes) >= 2:
 		quart = len(nodes)/4
-		random.choice(nodes[:quart]).flag = "start"
-		random.choice(nodes[-quart:]).flag = "end"
+		start = random.choice(nodes[:quart])
+		start.flag = "start"
+		start.name = "name"
+		end = random.choice(nodes[-quart:])
+		end.flag = "end"
+		end.name = "end"
 	return nodes
 
 ## ----------------------------------------------------------------------------
@@ -121,6 +125,18 @@ def render(nodes, X, Y, scale):
 ## ----------------------------------------------------------------------------
 ## OUTPUT
 
+def output(number_of_ants, nodes):
+	print number_of_ants
+	links = {}
+	for node in nodes:
+		if node.flag == "start":
+			print "##start"
+		elif node.flag == "end":
+			print "##end"
+		print "%s %s %s" % (node.name, node.X, node.Y)
+
+
+
 
 ## ----------------------------------------------------------------------------
 ## MAIN
@@ -128,9 +144,11 @@ def render(nodes, X, Y, scale):
 def main():
 	X = 8
 	Y = 6
+	scale = 2
+	number_of_ants = 5
 	holes = int((25 * (X * Y)) / 100.0)
 	nodes = setup_nodes(X, Y, holes)
-	scale = 2
 	render(nodes, X, Y, scale)
+	output(number_of_ants, nodes)
 
 main()
