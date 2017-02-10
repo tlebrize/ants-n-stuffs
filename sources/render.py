@@ -62,17 +62,19 @@ class Board(tk.Frame):
 				font=font, text="End")
 
 		else:
+			fill = "#ff7200" if not node.visited else "#008dff"
 			node.canva = self.canva.create_rectangle(
-				x-s, y-s, x+s, y+s, width=0, fill="#008dff")
+				x-s, y-s, x+s, y+s, width=0, fill=fill)
 			self.canva.create_text(x, y, width=t,
 				font=font, text=node.name)
 
 	def lightNode(self, node):
-		self.canva.itemconfig(node.canva, fill="#ff7200")
+		if node.name in ["start", "end"]:
+			return
+		self.canva.itemconfig(node.canva, fill="#ff008d")
 
 def render(nodes, X, Y, scale):
 	root = tk.Tk()
 	board = Board(root, nodes, X, Y, scale)
-	board.lightNode(random.choice(list(nodes)))
-	root.mainloop()
+	return board
 

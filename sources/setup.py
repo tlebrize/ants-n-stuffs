@@ -9,6 +9,8 @@ class Node(object):
 		self.name = name
 		self.neighbors = list()
 		self.canva = None
+		self.origin = None
+		self.visited = False
 
 	def __str__(self):
 		return "{}({}, {})".format(self.name, self.X, self.Y)
@@ -49,4 +51,4 @@ def setup_nodes(X, Y, holes):
 		end = random.choice(last_quarter)
 		nodes[end].name = "end"
 
-	return nodes.values()
+	return list(nodes.values())
