@@ -7,9 +7,9 @@ from sources.pathfinding import breadth_first_search, reverse
 def output(number_of_ants, nodes):
 	print(number_of_ants)
 	for node in nodes:
-		if node.name == "start":
+		if node.name == "Start":
 			print("##start")
-		elif node.name == "end":
+		elif node.name == "End":
 			print("##end")
 		print("%s %s %s" % (node.name, node.X, node.Y))
 
@@ -27,11 +27,11 @@ def output(number_of_ants, nodes):
 				print("{}-{}".format(node.name, neighbor.name))
 
 def main():
-	X = 10
-	Y = 8
-	scale = 1.5
+	X = 18
+	Y = 4
+	scale = 1
 	number_of_ants = 5
-	holes = 33
+	holes = 20
 	nodes = setup_nodes(X, Y, int((holes * (X * Y)) / 100.0))
 	output(number_of_ants, nodes)
 	breadth_first_search(nodes)

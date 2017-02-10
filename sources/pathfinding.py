@@ -1,10 +1,12 @@
+import collections
+
 class Queue(object):
 	def __init__(self):
-		self.queue = []
+		self.queue = collections.deque()
 
-	def get(self, i=0):
+	def get(self):
 		if len(self.queue):
-			return self.queue.pop(i)
+			return self.queue.popleft()
 
 	def put(self, elem):
 		self.queue.append(elem)
@@ -16,20 +18,20 @@ class Queue(object):
 def reverse(board, nodes):
 	current = None
 	for n in nodes:
-		if n.name == "start":
+		if n.name == "Start":
 			current = n
 
 	if not current or not current.visited:
 		return
 
-	while current.name is not "end":
+	while current.name is not "End":
 		board.lightNode(current)
 		current = current.origin
 
 def breadth_first_search(nodes):
 	end = None
 	for n in nodes:
-		if n.name == "end":
+		if n.name == "End":
 			end = n
 
 	if not end:
@@ -45,5 +47,5 @@ def breadth_first_search(nodes):
 				frontier.put(neighbor)
 				neighbor.visited = True
 				neighbor.origin = current
-			if neighbor.name == "start":
+			if neighbor.name == "Start":
 				return

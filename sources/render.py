@@ -49,13 +49,13 @@ class Board(tk.Frame):
 		t = int(self.scale * 0.65)
 		font = tkfont.Font(size=-int(self.scale * 0.12))
 
-		if node.name == "start":
+		if node.name == "Start":
 			node.canva = self.canva.create_rectangle(
 				x-s, y-s, x+s, y+s, width=0, fill="#8dff00")
 			self.canva.create_text(x, y, width=t,
 				font=font, text="Start")
 
-		elif node.name == "end":
+		elif node.name == "End":
 			node.canva = self.canva.create_rectangle(
 				x-s, y-s, x+s, y+s, width=0, fill="#ff000e")
 			self.canva.create_text(x, y, width=t,
@@ -69,7 +69,7 @@ class Board(tk.Frame):
 				font=font, text=node.name)
 
 	def lightNode(self, node):
-		if node.name in ["start", "end"]:
+		if node.name in ["Start", "End"]:
 			return
 		self.canva.itemconfig(node.canva, fill="#ff008d")
 

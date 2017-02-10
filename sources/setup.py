@@ -26,12 +26,15 @@ def get_neighbors(main, nodes):
 
 def setup_nodes(X, Y, holes):
 	rw = RandomWords()
-	node_names = rw.random_words(count=X*Y)
+	names_count = min(X*Y, 5400)
+	node_names = rw.random_words(count=names_count)
 
 	nodes = collections.OrderedDict()
 	for y in range(0, Y):
 		for x in range(0, X):
 			nodes[(x, y)] = Node(x, y, node_names.pop())
+			if not len(node_names):
+				node_names = rw.random_words(count=names_count)
 
 	to_remove = random.sample(nodes.keys(), holes)
 	for trm in to_remove:
@@ -47,8 +50,8 @@ def setup_nodes(X, Y, holes):
 		first_quarter = list(nodes.keys())[:quarter]
 		last_quarter = list(nodes.keys())[-quarter:]
 		start = random.choice(first_quarter)
-		nodes[start].name = "start"
+		nodes[start].name = "Start"
 		end = random.choice(last_quarter)
-		nodes[end].name = "end"
+		nodes[end].name = "End"
 
 	return list(nodes.values())
